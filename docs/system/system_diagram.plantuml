@@ -1,0 +1,80 @@
+@startuml
+title Small Baby-Safe Robot – System Architecture (V1)
+
+skinparam componentStyle rectangle
+skinparam linetype ortho
+
+package "Power" {
+  [Battery\n(2S Li-ion\n7.4–8.4 V)]
+  [Motor Power Rail\n(~9 V max)]
+  [Buck Converter\n5 V]
+  [LDO / Buck\n3.3 V]
+}
+
+package "Compute" {
+  [Raspberry Pi 4/5\nLinux]
+  [STM32 MCU\nReal-time Control]
+}
+
+package "Communication" {
+  [CAN Bus\n(or UART for V1)]
+}
+
+package "Motion Control" {
+  [Motor Drivers\n(H-Bridge)]
+  [Drive Motors\nx4\nDC + Gearbox]
+  [Steering Motors\nx4\nDC + Gearbox]
+  [Encoders\nx8\n(Drive + Steering)]
+}
+
+package "Programming & Debug" {
+  [SWD Header]
+  [BOOT0 Control]
+  [RESET Control]
+}
+
+' Power connections
+[Battery\n(2S Li-ion\n7.4–8.4 V)] --> [Motor Power Rail\n(~9 V max)]
+[Battery\n(2S Li-ion\n7.4–8.4 V)] --> [Buck Converter\n5 V]
+[Buck Converter\n5 V] --> [Raspberry Pi 4/5\nLinux]
+[Buck Converter\n5 V] --> [LDO / Buck\n3.3 V]
+[LDO / Buck\n3.3 V] --> [STM32 MCU\nReal-time Control]
+
+' Communication
+[Raspberry Pi 4/5\nLinux] --> [CAN Bus\n(or UART for V1)]
+[CAN Bus\n(or UART for V1)] --> [STM32 MCU\nReal-time Control]
+
+' Motion control
+[STM32 MCU\nReal-time Control] --> [Motor Drivers\n(H-Bridge)]
+[Motor Power Rail\n(~9 V max)] --> [Motor Drivers\n(H-Bridge)]
+
+[Motor Drivers\n(H-Bridge)] --> [Drive Motors\nx4\nDC + Gearbox]
+[Motor Drivers\n(H-Bridge)] --> [Steering Motors\nx4\nDC + Gearbox]
+
+[Drive Motors\nx4\nDC + Gearbox] --> [Encoders\nx8\n(Drive + Steering)]
+[Steering Motors\nx4\nDC + Gearbox] --> [Encoders\nx8\n(Drive + Steering)]
+[Encoders\nx8\n(Drive + Steering)] --> [STM32 MCU\nReal-time Control]
+
+' Programming / OTA flashing
+[Raspberry Pi 4/5\nLinux] --> [BOOT0 Control]
+[Raspberry Pi 4/5\nLinux] --> [RESET Control]
+[BOOT0 Control] --> [STM32 MCU\nReal-time Control]
+[RESET Control] --> [STM32 MCU\nReal-time Control]
+
+[SWD Header] --> [STM32 MCU\nReal-time Control]
+
+note right of [STM32 MCU\nReal-time Control]
+- Closed-loop motor control
+- Encoder feedback
+- Safety watchdog
+- Stops motors if comms lost
+end note
+
+note right of [Raspberry Pi 4/5\nLinux]
+- High-level logic
+- Kinematics
+- Networking / UI
+- OTA firmware flashing
+end note
+
+@enduml
