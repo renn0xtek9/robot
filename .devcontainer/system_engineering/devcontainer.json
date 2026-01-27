@@ -1,0 +1,14 @@
+{
+    "image": "ghcr.io/renn0xtek9/robot_system_engineering_environment:0.0.1",
+    "name": "Robot System Engineering",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "jebbs.plantuml"
+            ]
+        }
+    },
+    "mounts": [
+        "source=${localEnv:HOME}/.gitconfig,target=${env:HOME}/.gitconfig,type=bind,consistency=cached"
+    ]
+}
