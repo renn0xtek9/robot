@@ -1,0 +1,14 @@
+name: System design validation
+on:
+    pull_request:
+        branches:
+            master
+        paths-ignore:
+            - 'software/**'
+jobs:
+    System-design-artifacts-validation:
+        runs-on: ubuntu-latest
+        container:
+            image: ghcr.io/renn0xtek9/robot_system_engineering_environment:0.0.1
+        steps: 
+            - run: echo "Mock of validation step"
