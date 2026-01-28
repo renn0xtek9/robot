@@ -9,7 +9,7 @@
         }
     },
     "mounts": [
-        "source=${localEnv:HOME}/.ssh,target=${env:HOME}/.ssh,type=bind,consistency=cached",
+        "source=${localEnv:HOME}/.ssh,target=/home/ubuntu/.ssh,type=bind,consistency=cached",
         "source=${localEnv:HOME}/.gitconfig,target=${env:HOME}/.gitconfig,type=bind,consistency=cached",
         "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
     ],
@@ -18,5 +18,8 @@
         "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
             "enableNonRootDocker": true
         }
+    },
+    "remoteEnv": {
+        "GH_TOKEN": "${localEnv:GH_TOKEN}"
     }
 }
