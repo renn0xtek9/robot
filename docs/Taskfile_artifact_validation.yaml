@@ -1,0 +1,13 @@
+version: '3'
+
+tasks:
+  validate_plantuml:
+    vars: 
+      FILENAMES:
+        sh: find -type f -name "*.plantuml"
+    cmds:
+      - for: {var: FILENAMES, as: FILE}
+        cmd: plantuml -checkonly {{.FILE}}
+
+  validate_document_artifacts:
+    deps: [validate_plantuml]

@@ -1,5 +1,10 @@
 version: '3'
 
+includes:
+ lib:
+  taskfile: ./docs/Taskfile_artifact_validation.yaml
+  flatten: true
+
 tasks:
   build_base_image:
     sources:
