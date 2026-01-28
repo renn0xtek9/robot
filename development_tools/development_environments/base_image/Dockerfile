@@ -20,5 +20,9 @@ RUN mkdir -p /etc/apt/keyrings \
        > /etc/apt/sources.list.d/github-cli.list
 
 RUN apt-get update
-RUN apt-get install git git-lfs gh -y
+RUN apt-get install wget ca-certificates gnupg sudo git git-lfs gh -y
 RUN rm -rf /var/lib/apt/lists/*
+
+# Allow ubuntu user to sudo without password
+RUN echo "ubuntu ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ubuntu \
+    && chmod 0440 /etc/sudoers.d/ubuntu

@@ -10,5 +10,6 @@
     },
     "mounts": [
         "source=${localEnv:HOME}/.gitconfig,target=${env:HOME}/.gitconfig,type=bind,consistency=cached"
-    ]
+    ],
+    "remoteUser": "ubuntu"
 }
