@@ -20,7 +20,10 @@ RUN mkdir -p /etc/apt/keyrings \
        > /etc/apt/sources.list.d/github-cli.list
 
 RUN apt-get update
-RUN apt-get install wget ca-certificates gnupg sudo git git-lfs gh -y
+RUN apt-get install curl ca-certificates gnupg sudo git git-lfs gh docker.io -y
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/task/task/setup.deb.sh' | sudo -E bash
+RUN apt-get update 
+RUN apt-get install task
 RUN rm -rf /var/lib/apt/lists/*
 
 # Allow ubuntu user to sudo without password
