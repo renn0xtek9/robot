@@ -1,7 +1,6 @@
 # Robots requirements
 
 ## Safety requirements
-
 ```mermaid
 %%{ init : { 'theme' : 'default' } }%%
 requirementDiagram
