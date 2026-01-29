@@ -12,4 +12,7 @@ jobs:
             image: ghcr.io/renn0xtek9/robot_system_engineering_environment:0.0.1
         steps: 
             - uses: actions/checkout@v4
+            - run: id 
+            - run: ls 
             - run: task validate_document_artifacts
+            - run: task documentation
