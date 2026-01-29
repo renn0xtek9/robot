@@ -13,14 +13,16 @@ RUN apt-get update && apt-get install -y \
 # Install GitHub CLI repository
 RUN mkdir -p /etc/apt/keyrings \
     && wget -nv -O /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-       https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+    https://cli.github.com/packages/githubcli-archive-keyring.gpg \
     && chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] \
-       https://cli.github.com/packages stable main" \
-       > /etc/apt/sources.list.d/github-cli.list
+    https://cli.github.com/packages stable main" \
+    > /etc/apt/sources.list.d/github-cli.list
 
 RUN apt-get update
-RUN apt-get install curl ca-certificates gnupg sudo git git-lfs gh docker.io -y
+RUN apt-get install curl ca-certificates gnupg sudo git git-lfs gh docker.io python3-pip -y
+
+# Install task
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/task/task/setup.deb.sh' | sudo -E bash
 RUN apt-get update 
 RUN apt-get install task
