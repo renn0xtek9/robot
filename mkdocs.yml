@@ -1,0 +1,18 @@
+site_name: Robot Docs
+site_url: http://127.0.0.1:8000/
+theme:
+  name: material
+
+markdown_extensions:
+ - pymdownx.superfences:
+     custom_fences:
+       - name: mermaid
+         class: mermaid
+         format: !!python/name:pymdownx.superfences.fence_code_format
+
+plugins:
+  - search
+  - panzoom: 
+      # See https://playg0n.github.io/mkdocs-panzoom/#__tabbed_1_2 for configuration
+      full_screen: True # default False
+      key: "ctrl"

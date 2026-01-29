@@ -2,7 +2,6 @@
 
 ## Safety requirements
 ```mermaid
-%%{ init : { 'theme' : 'default' } }%%
 requirementDiagram
 
 designConstraint SR_Fire_Hazard_1 {
