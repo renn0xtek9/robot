@@ -4,7 +4,8 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "jebbs.plantuml"
+                "jebbs.plantuml",
+                "MermaidChart.vscode-mermaid-chart"
             ]
         }
     },
