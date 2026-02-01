@@ -13,10 +13,11 @@ tasks:
     deps: [validate_plantuml]
 
 
-  build_documentation:
+  documentation:
+    deps: [validate_document_artifacts]
     cmds:
       - mkdocs build
 
-  documentation:
+  serve_documentation:
     cmds:
       - mkdocs serve
