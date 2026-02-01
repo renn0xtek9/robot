@@ -8,3 +8,8 @@ markdown_extensions:
       custom_fences:
         - name: mermaid
           class: mermaid
+
+extra_javascript:
+  - https://unpkg.com/mermaid/dist/mermaid.min.js
+  - https://unpkg.com/svg-pan-zoom/dist/svg-pan-zoom.min.js
+  - js/mermaid-zoom.js
