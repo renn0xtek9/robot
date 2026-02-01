@@ -4,3 +4,4 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
 RUN apt-get install plantuml -y
 RUN pipx install mkdocs
+RUN pipx inject mkdocs pymdown-extensions mkdocs-material
