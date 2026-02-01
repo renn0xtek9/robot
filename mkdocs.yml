@@ -1,8 +1,10 @@
 site_name: Robot Docs
+
+theme:
+  name: material
+
 markdown_extensions:
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
-extra_javascript:
-  - https://unpkg.com/mermaid/dist/mermaid.min.js
