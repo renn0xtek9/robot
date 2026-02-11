@@ -13,3 +13,4 @@ jobs:
         steps: 
             - uses: actions/checkout@v4
             - run: task validate_document_artifacts
+            - run: task documentation
