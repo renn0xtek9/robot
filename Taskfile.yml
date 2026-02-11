@@ -7,33 +7,59 @@ includes:
 
 tasks:
   pull_ubuntu_24:
-    cmds: 
+    generates:
+      - build/ubuntu_24.digest
+    silent: true
+    cmds:
+      - mkdir -p build
       - docker pull ubuntu:24.04
+      - |
+        NEW_DIGEST=$(docker inspect --format='{{`{{index .RepoDigests 0}}`}}' ubuntu:24.04)
+        OLD_DIGEST=$(cat build/ubuntu_24.digest 2>/dev/null || echo "")
+
+        if [ "$NEW_DIGEST" != "$OLD_DIGEST" ]; then
+          echo "$NEW_DIGEST" > build/ubuntu_24.digest
+        fi
+        
 
   build_base_image:
     deps: [pull_ubuntu_24]
     sources:
-      - development_tools/development_environments/base_image/*
+      - development_tools/development_environments/base_image/**/*
+      - build/ubuntu_24.digest
     generates:
       - build/build_base_image.done
     cmds:
-      - docker build --no-cache -t ghcr.io/renn0xtek9/robot_base_image:0.0.1 development_tools/development_environments/base_image
+      - docker build -t ghcr.io/renn0xtek9/robot_base_image:0.0.1 development_tools/development_environments/base_image
+      - touch build/build_base_image.done
 
   push_base_image:
     deps: [build_base_image]
+    sources:
+      - build/build_base_image.done
+    generates:
+      - build/push_base_image.done
     cmds:
       - docker push ghcr.io/renn0xtek9/robot_base_image:0.0.1
+      - touch build/push_base_image.done
 
   build_system_engineering_environment:
     sources:
       - development_tools/development_environments/system_engineering_environment/*
+      - build/build_base_image.done
     generates:
       - build/build_system_engineering_environment.done
     deps: [build_base_image]
     cmds:
       - docker build -t ghcr.io/renn0xtek9/robot_system_engineering_environment:0.0.1 development_tools/development_environments/system_engineering_environment
+      - touch build/build_system_engineering_environment.done
 
   push_system_engineering_environment:
-    deps: [build_system_engineering_environment]
+    deps: [build_system_engineering_environment,push_base_image]
+    sources:
+      - build/build_system_engineering_environment.done
+    generates: 
+      - build/push_system_engineering_environment.done
     cmds:
       - docker push ghcr.io/renn0xtek9/robot_system_engineering_environment:0.0.1
+      - touch build/push_system_engineering_environment.done
