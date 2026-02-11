@@ -6,18 +6,23 @@ includes:
   flatten: true
 
 tasks:
+  pull_ubuntu_24:
+    cmds: 
+      - docker pull ubuntu:24.04
+
   build_base_image:
+    deps: [pull_ubuntu_24]
     sources:
       - development_tools/development_environments/base_image/*
     generates:
       - build/build_base_image.done
     cmds:
-      - docker build -t ghcr.io/renn0xtek9/robot_base_image:0.0.1 development_tools/development_environments/base_image
+      - docker build --no-cache -t ghcr.io/renn0xtek9/robot_base_image:0.0.1 development_tools/development_environments/base_image
 
   push_base_image:
     deps: [build_base_image]
     cmds:
-      - docker ghcr.io/renn0xtek9/robot_base_image:0.0.1
+      - docker push ghcr.io/renn0xtek9/robot_base_image:0.0.1
 
   build_system_engineering_environment:
     sources:
@@ -31,4 +36,4 @@ tasks:
   push_system_engineering_environment:
     deps: [build_system_engineering_environment]
     cmds:
-      - docker ghcr.io/renn0xtek9/robot_system_engineering_environment:0.0.1
+      - docker push ghcr.io/renn0xtek9/robot_system_engineering_environment:0.0.1
