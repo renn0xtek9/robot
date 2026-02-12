@@ -18,3 +18,5 @@ RUN ${VENV_PATH}/bin/pip install --no-cache-dir \
     pymdown-extensions \
     mkdocs-material \
     mkdocs-panzoom-plugin
+
+RUN alias reqid='cat /proc/sys/kernel/random/uuid  |sed "s/\([[:alnum:]]\)-.*/\1/"' 
