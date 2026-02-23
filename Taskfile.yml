@@ -63,3 +63,25 @@ tasks:
     cmds:
       - docker push ghcr.io/renn0xtek9/robot_system_engineering_environment:0.0.1
       - touch build/push_system_engineering_environment.done
+
+
+  build_software_engineering_environment:
+    sources:
+      - development_tools/development_environments/software_engineering_environment/*
+      - build/build_base_image.done
+    generates:
+      - build/build_software_engineering_environment.done
+    deps: [build_base_image]
+    cmds:
+      - docker build -t ghcr.io/renn0xtek9/robot_software_engineering_environment:0.0.1 development_tools/development_environments/software_engineering_environment
+      - touch build/build_software_engineering_environment.done
+
+  push_software_engineering_environment:
+    deps: [build_software_engineering_environment,push_base_image]
+    sources:
+      - build/build_software_engineering_environment.done
+    generates: 
+      - build/push_software_engineering_environment.done
+    cmds:
+      - docker push ghcr.io/renn0xtek9/robot_software_engineering_environment:0.0.1
+      - touch build/push_software_engineering_environment.done
