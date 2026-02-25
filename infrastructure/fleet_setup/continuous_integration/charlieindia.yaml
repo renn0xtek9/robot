@@ -1,0 +1,6 @@
+  - name: CharlieIndia (CI) setup
+    hosts: "{{ target_host }}"
+    tasks:
+      - name: Your Task
+        debug:
+        msg: "This task runs on {{ inventory_hostname }}"
