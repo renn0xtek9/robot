@@ -1,0 +1,91 @@
+- name: CharlieIndia (CI) GitHub Actions Runner - Setup
+  hosts: "{{ target_host }}"
+  become: yes
+  vars:
+    runner_user: github-runner
+    runner_dir: /home/{{ runner_user }}/actions-runner
+    repo_url: "https://github.com/renn0xtek9/robot"  
+    runner_token: "{{ runner_token }}"
+
+  tasks:
+    - name: Create a dedicated user for the runner
+      user:
+        name: "{{ runner_user }}"
+        shell: /bin/bash
+        system: yes
+        create_home: yes
+
+    - name: Install dependencies
+      apt:
+        name:  ["ca-certificates", "curl", "unzip", "jq"]
+
+    - name: Ensure keyrings directory exists
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Download Docker GPG key
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+        force: false
+
+    - name: Add Docker apt repository
+      ansible.builtin.apt_repository:
+        repo: >
+          deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc]
+          https://download.docker.com/linux/ubuntu
+          noble
+          stable
+        filename: docker
+        state: present
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+      
+    - name: Install docker dependencies
+      apt:
+        name: ["docker-ce", "docker-ce-cli", "containerd.io", "docker-buildx-plugin", "docker-compose-plugin"]
+        state: present
+      when: ansible_os_family == 'Debian'
+    
+    - name: Add runner user to docker group
+      ansible.builtin.user:
+        name: "{{ runner_user }}"
+        groups: docker
+        append: true
+
+    - name: Download GitHub runner
+      ansible.builtin.get_url:
+        url: "https://github.com/actions/runner/releases/download/v2.331.0/actions-runner-linux-x64-2.331.0.tar.gz"
+        dest: "/tmp/runner.tar.gz"
+        checksum: "{{ sha256_github_runner }}"
+        mode: '0755'
+        owner: "{{ runner_user }}"
+        group: "{{ runner_user }}"
+      
+    - name: Create runner directory in runner user folder 
+      ansible.builtin.file:
+        path: "{{ runner_dir }}"
+        state: directory
+        owner: "{{ runner_user }}"
+        group: "{{ runner_user }}"
+
+    - name: Extract runner
+      unarchive:
+        src: "/tmp/runner.tar.gz"
+        dest: "{{ runner_dir }}"
+        remote_src: yes
+        owner: "{{ runner_user }}"
+        group: "{{ runner_user }}"
+      become: yes
+      become_user: "{{ runner_user }}"
+
+    - name: Configure runner
+      command: "./config.sh --url {{ repo_url }} --token {{ runner_token }} --unattended --name {{ target_host }}"
+      args:
+        chdir: "{{ runner_dir }}"
+      become_user: "{{ runner_user }}"

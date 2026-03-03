@@ -1,0 +1,6 @@
+continuous-integration:
+  hosts:
+    charlieindia1:
+      ansible_host: 192.168.178.39
+      ansible_user: max
+      ansible_ssh_common_args: '-o PreferredAuthentications=password -o PubkeyAuthentication=no'

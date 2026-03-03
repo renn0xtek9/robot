@@ -1,0 +1,25 @@
+- name: CharlieIndia (CI) GitHub Actions Runner - Activate
+  hosts: "{{ target_host }}"
+  become: yes
+  vars:
+    runner_user: github-runner
+    runner_dir: /home/{{ runner_user }}/actions-runner
+    repo_url: "https://github.com/renn0xtek9/robot"  
+    runner_token: "{{ runner_token }}"
+
+  tasks:
+    - name: Install systemd service
+      template:
+        src: github-runner.service
+        dest: /etc/systemd/system/github-runner.service
+        mode: '0644'
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: Enable and start runner service
+      systemd:
+        name: github-runner
+        enabled: yes
+        state: started
