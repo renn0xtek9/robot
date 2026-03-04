@@ -18,6 +18,23 @@
     - name: Install dependencies
       apt:
         name:  ["ca-certificates", "curl", "unzip", "jq"]
+      
+    - name: Download and execute Taskwarrior setup script
+      ansible.builtin.shell: |
+        curl -1sLf 'https://dl.cloudsmith.io/public/task/task/setup.deb.sh' | bash
+      args:
+        executable: /bin/bash
+      register: setup_script_result
+      changed_when: "'already installed' not in setup_script_result.stdout"
+
+    - name: Update apt package index
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Install task package
+      ansible.builtin.apt:
+        name: task
+        state: present
 
     - name: Ensure keyrings directory exists
       ansible.builtin.file:

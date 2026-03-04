@@ -1,0 +1,26 @@
+name: Build runtime environement
+on:
+    pull_request:
+        branches:
+            master
+        paths:
+            - 'development_tools/**'
+            - '.github/**'
+            - 'software/**'
+            - 'docs/**'
+jobs:
+    Build-all-development-environment:
+        runs-on: self-hosted
+        steps: 
+            - uses: actions/checkout@v4
+              with:
+                path: _work_host/
+            - name: Build base docker image 
+              working-directory: /home/github-runner/actions-runner/_work/robot/robot/_work_host
+              run: task build_base_image
+            - name: Build software engineering image 
+              working-directory: /home/github-runner/actions-runner/_work/robot/robot/_work_host
+              run: task build_software_engineering_environment
+            - name: Build system engineering image 
+              working-directory: /home/github-runner/actions-runner/_work/robot/robot/_work_host
+              run: task build_system_engineering_environment
