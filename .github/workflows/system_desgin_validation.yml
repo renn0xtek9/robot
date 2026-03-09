@@ -6,7 +6,13 @@ on:
         paths-ignore:
             - 'software/**'
 jobs:
+    update-environments:
+        name: "Update environments"
+        uses: ./.github/workflows/build_development_environments.yml
+
     System-design-artifacts-validation:
+        name: "System design artifacts validation"
+        needs: update-environments
         runs-on: self-hosted
         container:
             image: ghcr.io/renn0xtek9/robot_system_engineering_environment:0.0.1

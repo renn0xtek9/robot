@@ -1,15 +1,10 @@
 name: Build runtime environement
 on:
-    pull_request:
-        branches:
-            master
-        paths:
-            - 'development_tools/**'
-            - '.github/**'
-            - 'software/**'
-            - 'docs/**'
+  workflow_call:
+  
 jobs:
     Build-all-development-environment:
+        name: "Build all development environments"
         runs-on: self-hosted
         steps: 
             - uses: actions/checkout@v4
