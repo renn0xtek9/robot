@@ -1,0 +1,139 @@
+---
+- name: CharlieIndia (CI) - Setup and Run APT Server
+  hosts: "{{ target_host }}"
+  become: true
+
+  vars:
+    apt_server_hostname: "192.168.178.39"
+
+    apt_server_cert_path: "/etc/apache2/ssl/charlieindia1.crt"
+    apt_server_key_path: "/etc/apache2/ssl/charlieindia1_mtls.key"
+
+    apt_server_ca_cert_path: "/etc/apache2/ssl/rootCA_renn0xtek9.crt"
+    apt_server_ca_cert_dir: "/etc/apache2/ssl/certs"
+
+    apt_repo_root: "/var/www/packages"
+
+  tasks:
+
+    ###########################################################################
+    # Install Packages
+    ###########################################################################
+
+    - name: Update apt cache
+      apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Install Apache packages
+      apt:
+        name:
+          - apache2
+          - apache2-utils
+        state: present
+
+    ###########################################################################
+    # Remove Broken Config First
+    ###########################################################################
+
+    - name: Remove enabled apt-server config if present
+      file:
+        path: /etc/apache2/sites-enabled/apt-server.conf
+        state: absent
+
+    - name: Remove available apt-server config if present
+      file:
+        path: /etc/apache2/sites-available/apt-server.conf
+        state: absent
+
+    ###########################################################################
+    # Enable Apache Modules BEFORE deploying config
+    ###########################################################################
+
+    - name: Enable required Apache modules
+      command: "a2enmod {{ item }}"
+      loop:
+        - ssl
+        - rewrite
+        - headers
+        - mime
+        - dir
+        - deflate
+      register: a2enmod_result
+      changed_when: "'already enabled' not in a2enmod_result.stdout"
+
+    ###########################################################################
+    # Create Directories
+    ###########################################################################
+
+    - name: Create repository directory
+      file:
+        path: "{{ apt_repo_root }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: "0755"
+
+    - name: Create SSL directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - /etc/apache2/ssl
+        - /etc/apache2/ssl/certs
+
+    ###########################################################################
+    # Deploy Config
+    ###########################################################################
+
+    - name: Deploy Apache vhost
+      template:
+        src: apt-server-vhost.conf.j2
+        dest: /etc/apache2/sites-available/apt-server.conf
+        mode: "0644"
+
+    - name: Enable apt-server site
+      command: a2ensite apt-server.conf
+      register: a2ensite_result
+      changed_when: "'already enabled' not in a2ensite_result.stdout"
+
+    - name: Disable default site
+      command: a2dissite 000-default.conf
+      register: a2dissite_result
+      changed_when: "'already disabled' not in a2dissite_result.stdout"
+      ignore_errors: true
+
+    ###########################################################################
+    # Validate Config
+    ###########################################################################
+
+    - name: Validate Apache configuration
+      command: apache2ctl configtest
+      changed_when: false
+
+    ###########################################################################
+    # Restart Apache
+    ###########################################################################
+
+    - name: Restart Apache2
+      systemd:
+        name: apache2
+        state: restarted
+        enabled: true
+
+    ###########################################################################
+    # Verify Service
+    ###########################################################################
+
+    - name: Wait for HTTPS service
+      wait_for:
+        host: localhost
+        port: 443
+        timeout: 30
+
+    - name: Display success message
+      debug:
+        msg: >
+          Apache APT repository with mTLS is running on
+          https://{{ apt_server_hostname }}/
