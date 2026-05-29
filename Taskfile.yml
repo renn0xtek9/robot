@@ -4,6 +4,9 @@ includes:
  lib:
   taskfile: ./docs/Taskfile_artifact_validation.yaml
   flatten: true
+ fleet: 
+  taskfile: ./infrastructure/Taskfile_setup.yaml
+  flatten: true
 
 tasks:
   pull_ubuntu_24:

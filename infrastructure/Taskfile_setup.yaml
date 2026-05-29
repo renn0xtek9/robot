@@ -1,0 +1,9 @@
+version: '3'
+
+tasks:
+
+  setup_apt_server_on_charlieindia:
+    dir: 
+      ./infrastructure/fleet_setup
+    cmds:
+      - ansible-playbook -K -i inventory.yaml continuous_integration/charlieindia_setup_apt_server.yaml -e "target_host=charlieindia1" --ask-pass --ask-become-pass
