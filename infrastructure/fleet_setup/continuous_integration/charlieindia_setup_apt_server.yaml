@@ -32,6 +32,139 @@
           - apache2-utils
         state: present
 
+    ###############################################################################
+    # Install Reprepro
+    ###############################################################################
+
+    - name: Install repository packages
+      apt:
+        name:
+          - reprepro
+          - gnupg
+        state: present
+
+    ###############################################################################
+    # Create Repository User
+    ###############################################################################
+
+    - name: Create repo user
+      user:
+        name: repo
+        system: true
+        create_home: true
+        shell: /bin/bash
+
+    ###############################################################################
+    # Repository Ownership
+    ###############################################################################
+
+    - name: Create repository directory
+      file:
+        path: "{{ apt_repo_root }}"
+        state: directory
+        owner: repo
+        group: repo
+        mode: "0755"
+
+    ###############################################################################
+    # Generate Repository GPG Key
+    ###############################################################################
+
+    - name: Create GPG batch file
+      copy:
+        dest: /home/repo/repo-gpg-batch
+        owner: repo
+        group: repo
+        mode: "0600"
+        content: |
+          Key-Type: RSA
+          Key-Length: 4096
+          Name-Real: CharlieIndia Repo
+          Name-Email: repo@charlieindia.local
+          Expire-Date: 0
+          %no-protection
+          %commit
+
+    - name: Check whether repository key already exists
+      become_user: repo
+      shell: |
+        gpg --list-secret-keys --with-colons | grep '^sec'
+      register: repo_key_exists
+      failed_when: false
+      changed_when: false
+
+    - name: Generate repository signing key
+      become_user: repo
+      command:
+        cmd: gpg --batch --generate-key /home/repo/repo-gpg-batch
+      when: repo_key_exists.stdout == ""
+
+    ###############################################################################
+    # Obtain Fingerprint
+    ###############################################################################
+
+    - name: Read repository key fingerprint
+      become_user: repo
+      shell: |
+        gpg --list-secret-keys \
+            --with-colons \
+            --fingerprint \
+          | awk -F: '/^fpr:/ {print $10; exit}'
+      register: repo_fingerprint
+      changed_when: false
+
+    - name: Store fingerprint fact
+      set_fact:
+        repo_gpg_fingerprint: "{{ repo_fingerprint.stdout }}"
+
+    ###############################################################################
+    # Reprepro Configuration
+    ###############################################################################
+
+    - name: Create reprepro configuration directory
+      file:
+        path: "{{ apt_repo_root }}/conf"
+        state: directory
+        owner: repo
+        group: repo
+        mode: "0755"
+
+    - name: Deploy reprepro distributions file
+      template:
+        src: apt-server-reprepro-conf.j2
+        dest: "{{ apt_repo_root }}/conf/distributions"
+        owner: repo
+        group: repo
+        mode: "0644"
+
+    ###############################################################################
+    # Export Public Key
+    ###############################################################################
+
+    - name: Export repository public key
+      become_user: repo
+      shell: |
+        gpg --armor \
+            --export {{ repo_gpg_fingerprint }} \
+          > {{ apt_repo_root }}/repo-public.asc
+      args:
+        creates: "{{ apt_repo_root }}/repo-public.asc"
+
+    - name: Ensure public key is readable
+      file:
+        path: "{{ apt_repo_root }}/repo-public.asc"
+        owner: repo
+        group: repo
+        mode: "0644"
+
+    ###############################################################################
+    # Run reprrepo to populate file systme
+    ###############################################################################
+ 
+    - name: Initiate filesystem with reprepo 
+      become_user: repo 
+      shell: reprepro -b {{ apt_repo_root }} export stable
+
     ###########################################################################
     # Remove Broken Config First
     ###########################################################################
