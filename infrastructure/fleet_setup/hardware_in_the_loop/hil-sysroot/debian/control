@@ -1,0 +1,10 @@
+Source: hil-sysroot
+Section: utils
+Priority: optional
+Maintainer: Maxime Haselbauer <maxime.haselbauer@googlemail.com>
+Build-Depends: dpkg-dev (>= 1.18)
+
+Package: hil-sysroot
+Architecture: all
+Depends: gcc-arm-linux-gnueabihf, gcc-arm-linux-gnueabi
+Description: Sysroot of hardware in the loop machine for cross compilation environment.
