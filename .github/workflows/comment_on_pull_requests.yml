@@ -13,4 +13,4 @@ jobs:
           path: _work_comment/
       - name: Create sysroot debian package of HIL
         working-directory: /home/github-runner/actions-runner/_work/robot/robot/_work_comment
-        run: ./infrastructure/fleet_setup/hardware_in_the_loop/create_sysroot_from_hil.sh
+        run: task create_debian_package_of_hil_sysroot
