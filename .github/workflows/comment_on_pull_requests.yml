@@ -1,0 +1,16 @@
+name: Create sysroot debian package from HIL
+
+on: issue_comment
+
+jobs:
+  package-sys-root-required:
+    name: Packaging Sysroot of HIL
+    if: ${{ github.event.issue.pull_request != null && contains(github.event.comment.body, '/ci-package-sysroot') }}
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: _work_comment/
+      - name: Create sysroot debian package of HIL
+        working-directory: /home/github-runner/actions-runner/_work/robot/robot/_work_comment
+        run: ./infrastructure/fleet_setup/hardware_in_the_loop/create_sysroot_from_hil.sh
