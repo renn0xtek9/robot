@@ -10,12 +10,12 @@ jobs:
             - uses: actions/checkout@v4
               with:
                 path: _work_host/
-            - name: Build base docker image 
+            - name: Push base docker image 
               working-directory: /home/github-runner/actions-runner/_work/robot/robot/_work_host
-              run: task build_base_image
-            - name: Build software engineering image 
+              run: task push_base_image
+            - name: Push software engineering image 
               working-directory: /home/github-runner/actions-runner/_work/robot/robot/_work_host
-              run: task build_software_engineering_environment
-            - name: Build system engineering image 
+              run: task push_software_engineering_environment
+            - name: Push system engineering image 
               working-directory: /home/github-runner/actions-runner/_work/robot/robot/_work_host
-              run: task build_system_engineering_environment
+              run: task push_system_engineering_environment

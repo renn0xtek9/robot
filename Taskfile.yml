@@ -8,6 +8,9 @@ includes:
   taskfile: ./infrastructure/Taskfile_setup.yaml
   flatten: true
 
+vars:
+  DOCKERREGISTRY: "192.168.178.39:5443"
+
 tasks:
   pull_ubuntu_24:
     generates:
@@ -33,7 +36,7 @@ tasks:
     generates:
       - build/build_base_image.done
     cmds:
-      - docker build -t ghcr.io/renn0xtek9/robot_base_image:0.0.1 development_tools/development_environments/base_image
+      - docker build -t {{.DOCKERREGISTRY}}/robot_base_image:0.0.1 development_tools/development_environments/base_image
       - touch build/build_base_image.done
 
   push_base_image:
@@ -43,7 +46,7 @@ tasks:
     generates:
       - build/push_base_image.done
     cmds:
-      - docker push ghcr.io/renn0xtek9/robot_base_image:0.0.1
+      - docker push {{.DOCKERREGISTRY}}/robot_base_image:0.0.1
       - touch build/push_base_image.done
 
   build_system_engineering_environment:
@@ -54,7 +57,7 @@ tasks:
       - build/build_system_engineering_environment.done
     deps: [build_base_image]
     cmds:
-      - docker build -t ghcr.io/renn0xtek9/robot_system_engineering_environment:0.0.1 development_tools/development_environments/system_engineering_environment
+      - docker build -t {{.DOCKERREGISTRY}}/robot_system_engineering_environment:0.0.1 development_tools/development_environments/system_engineering_environment
       - touch build/build_system_engineering_environment.done
 
   push_system_engineering_environment:
@@ -64,7 +67,7 @@ tasks:
     generates: 
       - build/push_system_engineering_environment.done
     cmds:
-      - docker push ghcr.io/renn0xtek9/robot_system_engineering_environment:0.0.1
+      - docker push {{.DOCKERREGISTRY}}/robot_system_engineering_environment:0.0.1
       - touch build/push_system_engineering_environment.done
 
 
@@ -76,7 +79,7 @@ tasks:
       - build/build_software_engineering_environment.done
     deps: [build_base_image]
     cmds:
-      - docker build -t ghcr.io/renn0xtek9/robot_software_engineering_environment:0.0.1 development_tools/development_environments/software_engineering_environment
+      - docker build -t {{.DOCKERREGISTRY}}/robot_software_engineering_environment:0.0.1 development_tools/development_environments/software_engineering_environment
       - touch build/build_software_engineering_environment.done
 
   push_software_engineering_environment:
@@ -86,7 +89,7 @@ tasks:
     generates: 
       - build/push_software_engineering_environment.done
     cmds:
-      - docker push ghcr.io/renn0xtek9/robot_software_engineering_environment:0.0.1
+      - docker push {{.DOCKERREGISTRY}}/robot_software_engineering_environment:0.0.1
       - touch build/push_software_engineering_environment.done
 
   create_debian_package_of_hil_sysroot: 
