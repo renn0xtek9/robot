@@ -1,4 +1,5 @@
 name: System design validation
+
 on:
     pull_request:
         branches:
@@ -15,8 +16,16 @@ jobs:
         needs: update-environments
         runs-on: self-hosted
         container:
-            image: ghcr.io/renn0xtek9/robot_system_engineering_environment:0.0.1
+            image: 192.168.178.39:5443/robot_system_engineering_environment:0.0.1
         steps: 
             - uses: actions/checkout@v4
-            - run: task validate_document_artifacts
-            - run: task documentation
+              with:
+                path: _work_system/
+                ref: ${{ github.event.pull_request.head.sha }}
+                submodules: recursive
+            - name: Validate system design artifacts
+              working-directory: /home/github-runner/actions-runner/_work/robot/robot/_work_system
+              run: task validate_document_artifacts
+            - name: Generate documentation
+              working-directory: /home/github-runner/actions-runner/_work/robot/robot/_work_system
+              run: task documentation
