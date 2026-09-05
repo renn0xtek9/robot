@@ -3,8 +3,23 @@ on:
   workflow_call:
   
 jobs:
+    update-environment-changes:
+        name: "Check development environment changes"
+        runs-on: ubuntu-latest
+        outputs:
+            changed: ${{ steps.filter.outputs.changed }}
+        steps:
+            - uses: dorny/paths-filter@v3
+              id: filter
+              with:
+                  filters: |
+                      changed:
+                          - 'development_tools/**'
+
     Build-all-development-environment:
         name: "Build all development environments"
+        needs: update-environment-changes
+        if: ${{ needs.update-environment-changes.outputs.changed == 'true' }}
         runs-on: self-hosted
         steps: 
             - uses: actions/checkout@v4

@@ -6,14 +6,21 @@ on:
             master
         paths-ignore:
             - 'software/**'
+
+permissions:
+    contents: read
+    pull-requests: read
+
 jobs:
     update-environments:
         name: "Update environments"
         uses: ./.github/workflows/build_development_environments.yml
 
-    System-design-artifacts-validation:
+    system-design-artifacts-validation:
         name: "System design artifacts validation"
-        needs: update-environments
+        needs:
+            - update-environments
+        if: ${{ always() && (needs.update-environments.result == 'success' || needs.update-environments.result == 'skipped') }}
         runs-on: self-hosted
         container:
             image: 192.168.178.39:5443/robot_system_engineering_environment:0.0.1
