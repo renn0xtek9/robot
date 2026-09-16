@@ -49,12 +49,13 @@ tasks:
   build_system_engineering_environment:
     sources:
       - development_tools/development_environments/system_engineering_environment/*
+      - development_tools/development_environments/vault/ubuntu_mhaselbauer_apt_client.crt
       - build/build_base_image.done
     generates:
       - build/build_system_engineering_environment.done
     deps: [build_base_image]
     cmds:
-      - docker build -t {{.DOCKERREGISTRY}}/robot_system_engineering_environment:0.0.1 development_tools/development_environments/system_engineering_environment
+      - docker build -f development_tools/development_environments/system_engineering_environment/Dockerfile -t {{.DOCKERREGISTRY}}/robot_system_engineering_environment:0.0.1 development_tools/development_environments
       - touch build/build_system_engineering_environment.done
 
   push_system_engineering_environment:
