@@ -96,4 +96,3 @@ tasks:
       - /tmp/hil-sysroot/hil-sysroot.deb
     cmds:
       - packaging/hardware_in_the_loop/create_sysroot_from_hil.sh
-      - scp /tmp/hil-sysroot/hil-sysroot.deb max@charlieindia1:/var/www/packages/incoming

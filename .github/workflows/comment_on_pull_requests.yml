@@ -5,7 +5,7 @@ on: issue_comment
 jobs:
   package-sys-root-required:
     name: Packaging Sysroot of HIL
-    if: ${{ github.event.issue.pull_request != null && contains(github.event.comment.body, '/ci-package-sysroot') }}
+    if: ${{ github.event.issue.pull_request == null && contains(github.event.comment.body, '/ci-package-sysroot') }}
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
