@@ -16,3 +16,11 @@ rsync -avz $MACHINE:/opt "$SYSROOT_DEST"
 
 cd "$BUILD_DIR"
 dpkg-buildpackage -us -uc
+
+PACKAGE_FILE="$(find "$(dirname "$BUILD_DIR")" -maxdepth 1 -type f -name "${PACKAGE_NAME}_*.deb" -print -quit)"
+if [[ -z "$PACKAGE_FILE" ]]; then
+	echo "No Debian package was created for $PACKAGE_NAME" >&2
+	exit 1
+fi
+echo Created debian package for sysroot: "$PACKAGE_FILE"
+scp "$PACKAGE_FILE" max@charlieindia1:/var/www/packages/incoming
