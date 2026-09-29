@@ -23,4 +23,4 @@ if [[ -z "$PACKAGE_FILE" ]]; then
 	exit 1
 fi
 echo Created debian package for sysroot: "$PACKAGE_FILE"
-scp "$PACKAGE_FILE" max@charlieindia1:/var/www/packages/incoming
+scp "$PACKAGE_FILE" repo@charlieindia1:/var/www/packages/incoming/robot
