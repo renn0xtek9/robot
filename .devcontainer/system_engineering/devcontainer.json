@@ -1,5 +1,5 @@
 {
-    "image": "ghcr.io/renn0xtek9/robot_system_engineering_environment:0.0.1",
+    "image": "192.168.178.39:5443/robot_system_engineering_environment:0.0.1",
     "name": "Robot System Engineering",
     "customizations": {
         "vscode": {

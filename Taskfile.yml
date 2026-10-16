@@ -33,7 +33,7 @@ tasks:
     generates:
       - build/build_base_image.done
     cmds:
-      - docker build -t {{.DOCKERREGISTRY}}/robot_base_image:0.0.1 development_tools/development_environments/base_image
+      - docker build -f development_tools/development_environments/base_image/Dockerfile -t {{.DOCKERREGISTRY}}/robot_base_image:0.0.1 development_tools/development_environments
       - touch build/build_base_image.done
 
   push_base_image:
