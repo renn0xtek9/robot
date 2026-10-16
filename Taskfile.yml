@@ -94,6 +94,6 @@ tasks:
     sources: 
       - packaging/hardware_in_the_loop/hil-sysroot/*
     generates:
-      - /tmp/hil-sysroot/hil-sysroot.deb
+      - /tmp/hil-sysroot_2.0.0ubuntu0_all.deb
     cmds:
       - packaging/hardware_in_the_loop/create_sysroot_from_hil.sh
