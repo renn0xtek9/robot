@@ -1,3 +1,9 @@
+hil-sysroot (2.0.0ubuntu0) jammy; urgency=medium
+
+  * Fix package being empty
+
+ -- Maxime Haselbauer <maxime.haselbauer@googlemail.com>  Fri, 16 Oct 2026 10:18:11 +0000
+
 hil-sysroot (1.0.0ubuntu0) jammy; urgency=medium
 
   * Initial version
