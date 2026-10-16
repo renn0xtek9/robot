@@ -97,3 +97,10 @@ tasks:
       - /tmp/hil-sysroot_2.0.0ubuntu0_all.deb
     cmds:
       - packaging/hardware_in_the_loop/create_sysroot_from_hil.sh
+
+  build_hil_software: 
+    sources: 
+      - software/* 
+    cmds: 
+     - cmake -S ./software -B ./software/build -G Ninja -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain-rpi4.cmake -DCMAKE_BUILD_TYPE=Release
+     - cmake --build -B ./software/build
