@@ -22,6 +22,21 @@ RUN apt-get install -y --no-install-recommends \
     pkg-config \
     file
 
+# Cross compiling tools for STM32 
+# See also https://github.com/STMicroelectronics/STM32Cube_MCU_Overall_Offer/blob/master/STM32Cube_HAL1_Offer.md
+RUN mkdir -p /opt/st
+RUN chown ubuntu /opt/st 
+WORKDIR /opt/st 
+RUN git clone --recursive https://github.com/STMicroelectronics/STM32CubeF1.git
+
+RUN apt-get install -y \
+    gcc-arm-none-eabi \
+    libnewlib-arm-none-eabi \
+    libstdc++-arm-none-eabi-newlib \
+    binutils-arm-none-eabi \
+    gdb-multiarch \
+    openocd
+
 # Install our own tooling
 RUN apt-get install -y hil-sysroot
 
