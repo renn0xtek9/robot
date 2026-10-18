@@ -104,3 +104,10 @@ tasks:
     cmds: 
      - cmake -S ./software -B ./software/build -G Ninja -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain-rpi4.cmake -DCMAKE_BUILD_TYPE=Release
      - cmake --build -B ./software/build
+
+  build_firmware:
+    sources:
+      - software/*
+    cmds: 
+      - cmake -S ./software -B ./software/build/firmware -G Ninja -DCMAKE_TOOLCHAIN_FILE=cmake/arm-none-eabi.cmake -DCMAKE_BUILD_TYPE=Debug
+      - cmake --build ./software/build/firmware --target firmware.elf 
