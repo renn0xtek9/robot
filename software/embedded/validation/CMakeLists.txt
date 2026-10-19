@@ -1,1 +1,0 @@
-add_subdirectory(hardware_in_the_loop)

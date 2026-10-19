@@ -1,0 +1,39 @@
+name: Software validation
+
+on:
+    pull_request:
+        branches:
+            master
+        paths-ignore:
+            - 'docs/**'
+            - 'packaging/**'
+
+permissions:
+    contents: read
+    pull-requests: read
+
+jobs:
+    update-environments:
+        name: "Update environments"
+        uses: ./.github/workflows/build_development_environments.yml
+
+    software-validation:
+        name: "Software validation"
+        needs:
+            - update-environments
+        if: ${{ always() && (needs.update-environments.result == 'success' || needs.update-environments.result == 'skipped') }}
+        runs-on: self-hosted
+        container:
+            image: 192.168.178.39:5443/robot_software_engineering_environment:0.0.1
+        steps: 
+            - uses: actions/checkout@v4
+              with:
+                path: _work_software/
+                ref: ${{ github.event.pull_request.head.sha }}
+                submodules: recursive
+            - name: Build firmware
+              working-directory: /home/github-runner/actions-runner/_work/robot/robot/_work_software
+              run: task build_firmware
+            - name: Build hardware in the loop software 
+              working-directory: /home/github-runner/actions-runner/_work/robot/robot/_work_software
+              run: task build_hil_software
