@@ -1,7 +1,6 @@
-
 cmake_minimum_required(VERSION 4.4)
 project(firmware C ASM)
-
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../cmake")
 set(CUBE_ROOT "/opt/st/STM32CubeF1/")
 
 set(HAL "${CUBE_ROOT}/Drivers/STM32F1xx_HAL_Driver")
