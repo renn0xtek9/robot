@@ -34,5 +34,6 @@ jobs:
             - name: Build firmware
               working-directory: /home/github-runner/actions-runner/_work/robot/robot/_work_software
               run: task build_firmware
-            - name: Build hadware in the loop software 
+            - name: Build hardware in the loop software 
+              working-directory: /home/github-runner/actions-runner/_work/robot/robot/_work_software
               run: task build_hil_software
