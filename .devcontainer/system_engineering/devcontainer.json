@@ -5,7 +5,8 @@
         "vscode": {
             "extensions": [
                 "jebbs.plantuml",
-                "MermaidChart.vscode-mermaid-chart"
+                "MermaidChart.vscode-mermaid-chart",
+                "elan8.spec42"
             ]
         }
     },
